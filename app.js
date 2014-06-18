@@ -2,8 +2,17 @@ var hipchat = require('node-hipchat'),
     _ = require('lodash')
     async = require('async')
     getUrls = require('get-urls')
+    docopt = require('docopt').docopt
 
-var hc = new hipchat('56fdd7ceb28f09aa38c6169490c8f2');
+doc = " \
+Usage: \n\
+  app.js <apikey> \n\
+"
+var opts = docopt(doc)
+var apikey = opts['<api>']
+
+var hc = new hipchat(apikey);
+
 var rooms = []
 var history = []
 var urls = []
@@ -21,26 +30,22 @@ var readRooms = function(cb){
 
 //Read all the rooms into a flattened message collection
 var readMessages = function(cb){
-  var times = rooms.length;
-
   //counter-cum-callback caller
-  var cbinternal = _.after(times, function() {
+  var cbinternal = _.after(rooms.length, function() {
     cb();
   });
 
   _.forEach(rooms, function(room){
-
     hc.getHistory(room, function(h){
-
       _.forEach(h.messages, function(msg){
         history.push({msg: msg.message,from: msg.from.name})
       })
       cbinternal();
     })
-
   })
 }
 
+//extract urls
 var getUrlsFlat = function(cb){
   _.forEach(history, function(m){
     msgUrls = getUrls(m.msg);
@@ -54,8 +59,6 @@ var getUrlsFlat = function(cb){
 
 
 async.series([readRooms, readMessages, getUrlsFlat], function(err, results){
-  // console.log(rooms)
-  // console.log(history)
   console.log(urls)
 });
 
