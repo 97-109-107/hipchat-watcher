@@ -1,0 +1,46 @@
+*.ref.*
+History*
+history*
+*history*
+*History*
+*.sqlite
+.agignore
+todo.org
+jam*
+*Logs.sh
+*.db
+note.txt
+### Linux ###
+.*
+!.gitignore
+*~
+*.pem
+### vim ###
+.*.s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+### Node ###
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+
+npm-debug.log
+node_modules
+
+*config.js
+accounts.bak.json
+backup-settings*
+wwwasit-flowchart.xml
+mongocommands.mdown
