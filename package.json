@@ -1,0 +1,28 @@
+{
+  "name": "hipchat-watcher",
+  "version": "0.0.1",
+  "description": "Go too all rooms in Hipchat and push the messages to a Wwwas.it space",
+  "main": "app.js",
+  "dependencies": {
+    "async": "^0.9.0",
+    "docopt": "^0.4.0",
+    "get-urls": "^0.1.2",
+    "lodash": "^2.4.1",
+    "node-hipchat": "^0.4.5",
+    "unirest": "^0.2.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:97-109-107/hipchat-watcher.git"
+  },
+  "author": "A. Kaniowski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/97-109-107/hipchat-watcher/issues"
+  },
+  "homepage": "https://github.com/97-109-107/hipchat-watcher"
+}

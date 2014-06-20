@@ -3,15 +3,17 @@ var hipchat = require('node-hipchat'),
     async = require('async')
     getUrls = require('get-urls')
     docopt = require('docopt').docopt
+    unirest = require('unirest')
 
 doc = " \
 Usage: \n\
   app.js <apikey> \n\
 "
 var opts = docopt(doc)
-var apikey = opts['<api>']
+var apikey = opts['<apikey>']
 
 var hc = new hipchat(apikey);
+var destinationRoom = "firmafon"
 
 var rooms = []
 var history = []
@@ -59,6 +61,21 @@ var getUrlsFlat = function(cb){
 
 
 async.series([readRooms, readMessages, getUrlsFlat], function(err, results){
-  console.log(urls)
+
+  var payload = { 
+      command: "add",
+      room: destinationRoom,
+      urls: urls
+  }
+
+  console.log("this is the payload");
+  console.log(payload);
+
+  unirest.post('http://localhost:1337/api/control')
+    .headers({ 'Accept': 'application/json' })
+    .send(payload)
+    .end(function (response) {
+      console.log(response.body);
+    });
 });
 
