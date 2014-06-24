@@ -1,19 +1,20 @@
 var hipchat = require('node-hipchat'),
-    _ = require('lodash')
-    async = require('async')
-    getUrls = require('get-urls')
-    docopt = require('docopt').docopt
-    unirest = require('unirest')
+    CronJob = require('cron').CronJob,
+    _ = require('lodash'),
+    async = require('async'),
+    docopt = require('docopt').docopt,
+    getUrls = require('get-urls'),
+    unirest = require('unirest');
 
 doc = " \
 Usage: \n\
-  app.js <apikey> \n\
+  app.js <apikey> <wwwasitRoomId>\n\
 "
 var opts = docopt(doc)
 var apikey = opts['<apikey>']
+var destinationRoom = opts['<wwwasitRoomId>']
 
 var hc = new hipchat(apikey);
-var destinationRoom = "firmafon"
 
 var rooms = []
 var history = []
@@ -59,23 +60,30 @@ var getUrlsFlat = function(cb){
   cb()
 }
 
+function main(){
+  async.series([readRooms, readMessages, getUrlsFlat], function(err, results){
 
-async.series([readRooms, readMessages, getUrlsFlat], function(err, results){
+    var payload = { 
+      "command": "add",
+      "room": destinationRoom,
+      "urls": JSON.stringify(urls)
+    }
 
-  var payload = { 
-      command: "add",
-      room: destinationRoom,
-      urls: urls
-  }
-
-  console.log("this is the payload");
-  console.log(payload);
-
-  unirest.post('http://localhost:1337/api/control')
+    unirest.post('http://localhost:1337/api/control')
     .headers({ 'Accept': 'application/json' })
     .send(payload)
     .end(function (response) {
-      console.log(response.body);
+      console.log("Server will proceed with these urls ", response.body);
     });
-});
+  });
+}
 
+main();
+
+var job = new CronJob({
+  cronTime: '*/5 * * * *',
+  onTick: function() {
+    main();
+  },
+  start: true
+});
