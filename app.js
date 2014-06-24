@@ -69,19 +69,25 @@ function main(){
       "urls": JSON.stringify(urls)
     }
 
+
     unirest.post('http://localhost:1337/api/control')
     .headers({ 'Accept': 'application/json' })
     .send(payload)
     .end(function (response) {
       console.log("Server will proceed with these urls ", response.body);
     });
+
+    //flush for next reload
+    urls = [];
+    history = [];
+    rooms = []
   });
 }
 
 main();
 
 var job = new CronJob({
-  cronTime: '*/5 * * * *',
+  cronTime: '*/6 * * * *',
   onTick: function() {
     main();
   },
