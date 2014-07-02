@@ -91,7 +91,7 @@ function main(){
 main();
 
 var job = new CronJob({
-  cronTime: '*/6 * * * *',
+  cronTime: '*/7 * * * *',
   onTick: function() {
     main();
   },
