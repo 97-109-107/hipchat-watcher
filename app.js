@@ -9,7 +9,6 @@ var hipchat = require('node-hipchat'),
 doc = " \
 Usage: \n\
   app.js <apikey> <wwwasitRoomId>\n\
-  app.js <apikey> <wwwasitRoomId> <YYYY-MM-DD>\n\
 "
 var opts = docopt(doc)
 var apikey = opts['<apikey>']
