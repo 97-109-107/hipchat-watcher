@@ -9,10 +9,12 @@ var hipchat = require('node-hipchat'),
 doc = " \
 Usage: \n\
   app.js <apikey> <wwwasitRoomId>\n\
+  app.js <apikey> <wwwasitRoomId> <YYYY-MM-DD>\n\
 "
 var opts = docopt(doc)
 var apikey = opts['<apikey>']
 var destinationRoom = opts['<wwwasitRoomId>']
+var since = opts['<YYYY-MM-DD>'] || null
 
 var hc = new hipchat(apikey);
 
@@ -37,12 +39,13 @@ var readMessages = function(cb){
   var cbinternal = _.after(rooms.length, function() {
     cb();
   });
-
   _.forEach(rooms, function(room){
     hc.getHistory(room, function(h){
-      _.forEach(h.messages, function(msg){
-        history.push({msg: msg.message,from: msg.from.name})
-      })
+      if(h !== null){
+        _.forEach(h.messages, function(msg){
+          history.push({msg: msg.message,from: msg.from.name})
+        })
+      }
       cbinternal();
     })
   })
@@ -69,12 +72,13 @@ function main(){
       "urls": JSON.stringify(urls)
     }
 
+    console.log(urls)
 
-    unirest.post('http://localhost:1337/api/control')
+    unirest.post('http://beta.wwwas.it/api/control')
     .headers({ 'Accept': 'application/json' })
     .send(payload)
     .end(function (response) {
-      console.log("Server will proceed with these urls ", response.body);
+      // console.log("Server will proceed with these urls ", response.body);
     });
 
     //flush for next reload
